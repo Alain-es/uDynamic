@@ -1,0 +1,13 @@
+<div ng-controller="uDynamic.CheckboxListController">
+
+    <ul class="udynamic-checkboxlist">
+
+        <li ng-show="!items.length">There is no items to display!</li>
+
+        <li ng-repeat="item in items">
+            <input type="checkbox" value="{{item.key}}" ng-checked="model.value.indexOf(item.key) > -1" ng-click="changeVisibilityForSelection(item)">
+            {{item.text}}
+        </li>
+
+    </ul>
+</div>

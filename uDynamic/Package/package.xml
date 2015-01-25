@@ -22,7 +22,7 @@
       <name>uDynamic</name>
       <version>0.1.0</version>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
-      <url>uDynamic</url>
+      <url>http://our.umbraco.org/projects/backoffice-extensions/uDynamic</url>
       <requirements>
         <major>7</major>
         <minor>1</minor>
@@ -43,7 +43,5 @@
   <Languages />
   <DataTypes>
   </DataTypes>  
-  <Actions>
-  </Actions>
   <control>/App_Plugins/uDynamic/Installer/Setup.ascx</control>
 </umbPackage>

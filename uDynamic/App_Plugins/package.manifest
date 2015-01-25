@@ -1,0 +1,32 @@
+﻿{
+    propertyEditors: [      
+        {
+			alias: 'uDynamic.CheckboxList',
+			name: 'Checkbox list (uDynamic)',
+			editor:{
+				valueType: "JSON",
+				view: '~/App_Plugins/uDynamic/CheckboxList/checkboxlist.html',
+				hideLabel: false
+			},
+			prevalues : {
+				fields: [
+					{
+					    label: "Checkbox list values",
+					    description: "Add and remove values for the list.",
+					    key: "items",
+					    view: "~/App_Plugins/uDynamic/Prevalues/prevalues.html"
+					}         
+				]
+			}
+        }
+    ],
+    javascript: [
+		'~/App_Plugins/uDynamic/CheckboxList/checkboxlistcontroller.js',
+		'~/App_Plugins/uDynamic/Prevalues/prevaluescontroller.js'
+    ],
+
+    css: [
+		'~/App_Plugins/uDynamic/uDynamic.css'
+    ]
+
+}
