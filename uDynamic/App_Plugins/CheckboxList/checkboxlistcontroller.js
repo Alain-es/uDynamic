@@ -29,8 +29,8 @@ angular.module("umbraco").controller("uDynamic.CheckboxListController", function
     }, 0);
 
 
-    // Change visibility/state of the tabs and properties for the checked/unchecked item
-    $scope.changeVisibilityForSelection = function changeVisibilityForSelection(item) {
+    // Item click
+    $scope.click = function click(item) {
         var index = $scope.model.value.indexOf(item.key);
         if (index > -1) {
             // Is currently selected
@@ -62,6 +62,9 @@ angular.module("umbraco").controller("uDynamic.CheckboxListController", function
 
         // Find the item
         var index = $scope.items.indexOf(item);
+
+
+        if (index > -1) {
 
         // Hide/show tabs
         var tabs = $scope.items[index].tabs;
@@ -98,20 +101,21 @@ angular.module("umbraco").controller("uDynamic.CheckboxListController", function
                     }
                 });
             });
+            }
 
             // Hide/show properties
             var properties = $scope.items[index].properties;
             if (properties && properties !== '') {
-                var propertyLabels = properties.split(",");
-                angular.forEach(propertyLabels, function (value, key) {
+                var propertyAliases = properties.split(",");
+                angular.forEach(propertyAliases, function (value, key) {
                     // Remove the first charater which contains the action (+ show, - Hide, * readonly)
-                    var propertyLabel = value.substring(1, value.length);
+                    var propertyAlias = value.substring(1, value.length);
                     var action = value.charAt(0);
                     // Look for the property div
                     var propertyControls = $("div[class*='umb-property']:has(ng-form)");
                     // Show/hide the control
                     angular.forEach(propertyControls, function (value, key) {
-                        if ($(value).find(".control-label").attr("for") == propertyLabel) {
+                        if ($(value).find(".control-label").attr("for") == propertyAlias) {
                             switch (action) {
                                 case '+':
                                     if (selected) {
