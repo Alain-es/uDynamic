@@ -20,7 +20,7 @@
   <info>
     <package>
       <name>uDynamic</name>
-      <version>0.1.0</version>
+      <version>0.3.0</version>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
       <url>http://our.umbraco.org/projects/backoffice-extensions/uDynamic</url>
       <requirements>

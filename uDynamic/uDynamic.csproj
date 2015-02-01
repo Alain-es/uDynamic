@@ -238,15 +238,14 @@
       <DependentUpon>Setup.ascx</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+    <Compile Include="Controllers\uDynamicApiController.cs" />
+    <Compile Include="Models\DropdownListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Code\Extensions\" />
     <Folder Include="App_Code\Helpers\" />
     <Folder Include="App_Data\" />
-    <Folder Include="App_Start\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <PropertyGroup>
@@ -278,6 +277,7 @@
     <PostBuildEvent>SET PackageName=uDynamic
 
 CALL "$(ProjectDir)Package\build.bat" "%25PackageName%25" "$(ProjectDir)" "$(SolutionDir)" "$(SolutionName)" "$(TargetDir)" "$(TargetPath)"
+
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

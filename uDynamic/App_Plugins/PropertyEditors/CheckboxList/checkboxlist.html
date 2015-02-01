@@ -1,9 +1,10 @@
 <div ng-controller="uDynamic.CheckboxListController">
 
-    <ul class="udynamic-checkboxlist">
+    <div class="uDynamic-Loading" ng-show="!isLoaded">Loading ...</div>
 
-        <li ng-show="!items.length">There is no items to display!</li>
+    <div ng-show="isLoaded && !items.length">There are no items to display.</div>
 
+    <ul class="udynamic-checkboxlist" ng-show="isLoaded && items.length">
         <li ng-repeat="item in items">
             <input type="checkbox" value="{{item.key}}" ng-checked="model.value.indexOf(item.key) > -1" ng-click="click(item)">
             {{item.text}}

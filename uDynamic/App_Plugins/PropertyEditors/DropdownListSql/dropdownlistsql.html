@@ -1,0 +1,13 @@
+<div ng-controller="uDynamic.DropdownListControllerSql">
+
+    <div class="uDynamic-Loading" ng-show="!isLoaded">Loading ...</div>
+
+    <div ng-show="isLoaded && !items.length">There are no items to display.</div>
+
+    <div ng-show="isLoaded && items.length">
+        <select id="{{model.alias}}" class="chosen-select umb-editor umb-dropdown" ng-model="model.value" ng-change="click()" ng-options="item.key as item.text for item in items">
+            <option value=""></option>
+        </select>
+    </div>
+
+</div>

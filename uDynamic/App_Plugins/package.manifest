@@ -5,7 +5,7 @@
 			name: 'Checkbox list (uDynamic)',
 			editor:{
 				valueType: "JSON",
-				view: '~/App_Plugins/uDynamic/CheckboxList/checkboxlist.html',
+				view: '~/App_Plugins/uDynamic/PropertyEditors/CheckboxList/checkboxlist.html',
 				hideLabel: false
 			},
 			prevalues : {
@@ -18,15 +18,80 @@
 					}         
 				]
 			}
+        },
+        {
+			alias: 'uDynamic.DropdownList',
+			name: 'Dropdown list (uDynamic)',
+			editor:{
+				valueType: "JSON",
+				view: '~/App_Plugins/uDynamic/PropertyEditors/DropdownList/dropdownlist.html',
+				hideLabel: false
+			},
+			prevalues : {
+				fields: [
+					{
+					    label: "Use Chosen jQuery plugin",
+					    description: "Render the dropdown list using the Chosen jQuery plugin.",
+					    key: "useChosen",
+						view: "boolean"
+					},
+					{
+					    label: "Dropdown list values",
+					    description: "Add and remove values for the list.",
+					    key: "items",
+					    view: "~/App_Plugins/uDynamic/Prevalues/prevalues.html"
+					}         
+				]
+			}
+        },
+        {
+			alias: 'uDynamic.DropdownListSql',
+			name: 'Dropdown list SQL (uDynamic)',
+			editor:{
+				valueType: "JSON",
+				view: '~/App_Plugins/uDynamic/PropertyEditors/DropdownListSql/dropdownlistsql.html',
+				hideLabel: false
+			},
+			prevalues : {
+				fields: [
+					{
+					    label: "Use Chosen jQuery plugin",
+					    description: "Render the dropdown list using the Chosen jQuery plugin.",
+					    key: "useChosen",
+						view: "boolean"
+					},
+					{
+					    label: "db table name",
+					    description: "",
+					    key: "dbTableName",
+						view: "textstring"
+					},
+					{
+					    label: "db column name for text",
+					    description: "",
+					    key: "dbTextColumnName",
+						view: "textstring"
+					},
+					{
+					    label: "db column name for key",
+					    description: "",
+					    key: "dbKeyColumnName",
+						view: "textstring"
+					}
+				]
+			}
         }
     ],
     javascript: [
-		'~/App_Plugins/uDynamic/CheckboxList/checkboxlistcontroller.js',
-		'~/App_Plugins/uDynamic/Prevalues/prevaluescontroller.js'
+		'~/App_Plugins/uDynamic/PropertyEditors/CheckboxList/checkboxlistcontroller.js',
+		'~/App_Plugins/uDynamic/PropertyEditors/DropdownList/dropdownlistcontroller.js',
+		'~/App_Plugins/uDynamic/PropertyEditors/DropdownListSql/dropdownlistsqlcontroller.js',
+		'~/App_Plugins/uDynamic/Prevalues/prevaluescontroller.js',
+		'~/App_Plugins/uDynamic/udynamic.resource.js'
     ],
 
     css: [
-		'~/App_Plugins/uDynamic/uDynamic.css'
+		'~/App_Plugins/uDynamic/udynamic.css'
     ]
 
 }
