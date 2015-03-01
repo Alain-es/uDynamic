@@ -207,7 +207,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="App_Plugins\**\*.*" />
+    <Content Include="App_Plugins\**\*.*" />
     <Content Include="App_Code\Installer\Setup.ascx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -226,6 +226,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Code\Constants.cs" />
     <Compile Include="App_Code\EmbeddedAssembly\EmbeddedResourceController.cs" />
     <Compile Include="App_Code\EmbeddedAssembly\RouteConfig.cs" />
     <Compile Include="App_Code\Events\UmbracoStartupEvent.cs" />

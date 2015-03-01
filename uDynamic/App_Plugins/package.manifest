@@ -61,23 +61,35 @@
 						view: "boolean"
 					},
 					{
-					    label: "db table name",
+					    label: "SQL command",
 					    description: "",
-					    key: "dbTableName",
+					    key: "sqlCommand",
+						view: "textarea"
+					},
+					{
+					    label: "Column name for key",
+					    description: "This setting is optional and sets which column contains the 'key' values. If left empty the first column of the SQL command will be used.",
+					    key: "dbKeyColumnName",
 						view: "textstring"
 					},
 					{
-					    label: "db column name for text",
-					    description: "",
+					    label: "Column name for text",
+					    description: "This setting is optional and sets which column contains the 'text' values. If left empty the second column of the SQL command will be used.",
 					    key: "dbTextColumnName",
 						view: "textstring"
 					},
 					{
-					    label: "db column name for key",
-					    description: "",
-					    key: "dbKeyColumnName",
+					    label: "Cache duration (seconds)",
+					    description: "Sets the number of seconds that the values retrieved from the DB will be cached. Setting the value to 0 will disable the cache.",
+					    key: "cacheDuration",
+						view: "number"
+					},
+					{
+					    label: "Table name",
+					    description: "Deprecated: This setting is not used anymore (Kept for backward compatibility).",
+					    key: "dbTableName",
 						view: "textstring"
-					}
+					},
 				]
 			}
         }

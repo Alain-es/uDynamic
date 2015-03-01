@@ -20,7 +20,7 @@ namespace uDynamic.Events
             //LogHelper.Info(typeof(UmbracoStartupEvent), string.Format("Startup event ..."));
 
             // Register routes for embedded files
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }
 
