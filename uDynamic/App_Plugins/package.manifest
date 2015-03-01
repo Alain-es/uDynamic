@@ -110,7 +110,7 @@
 					},
 					{
 					    label: "Table name",
-					    description: "Deprecated: This setting is not used anymore (Kept for backward compatibility).",
+					    description: "[Deprecated] This setting is not used anymore (Kept for backward compatibility).",
 					    key: "dbTableName",
 						view: "textstring"
 					},
