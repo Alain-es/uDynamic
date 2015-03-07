@@ -21,6 +21,16 @@ namespace uDynamic.Controllers.Api
     {
 
         /// <summary>
+        /// [Depracated]
+        /// Retrieve all dropdown list items
+        /// </summary>
+        [System.Web.Http.HttpGet]
+        public IEnumerable<DropdownListItem> GetDropdownListSqlItems(string dbTableName, string dbTextColumnName, string dbKeyColumnName)
+        {
+            return GetDropdownListSqlItems(string.Empty, dbKeyColumnName, dbTextColumnName, string.Empty, string.Empty, string.Empty, 0);
+        }
+
+        /// <summary>
         /// Retrieve all dropdown list items
         /// </summary>
         [System.Web.Http.HttpGet]
