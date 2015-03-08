@@ -12,94 +12,9 @@
       <orgName>Setup.ascx</orgName>
     </file>
     <file>
-      <guid>package.manifest</guid>
+      <guid>Install.zip</guid>
       <orgPath>/App_Plugins/uDynamic</orgPath>
-      <orgName>package.manifest</orgName>
-    </file>
-    <file>
-      <guid>udynamic.css</guid>
-      <orgPath>/App_Plugins/uDynamic</orgPath>
-      <orgName>udynamic.css</orgName>
-    </file>
-    <file>
-      <guid>udynamic.resource.js</guid>
-      <orgPath>/App_Plugins/uDynamic</orgPath>
-      <orgName>udynamic.resource.js</orgName>
-    </file>
-    <file>
-      <guid>Logo.png</guid>
-      <orgPath>/App_Plugins/uDynamic/Installer</orgPath>
-      <orgName>Logo.png</orgName>
-    </file>
-    <file>
-      <guid>prevalues.css</guid>
-      <orgPath>/App_Plugins/uDynamic/Prevalues</orgPath>
-      <orgName>prevalues.css</orgName>
-    </file>
-    <file>
-      <guid>prevalues.html</guid>
-      <orgPath>/App_Plugins/uDynamic/Prevalues</orgPath>
-      <orgName>prevalues.html</orgName>
-    </file>
-    <file>
-      <guid>prevaluescontroller.js</guid>
-      <orgPath>/App_Plugins/uDynamic/Prevalues</orgPath>
-      <orgName>prevaluescontroller.js</orgName>
-    </file>
-    <file>
-      <guid>common.js</guid>
-      <orgPath>/App_Plugins/uDynamic/PropertyEditors</orgPath>
-      <orgName>common.js</orgName>
-    </file>
-    <file>
-      <guid>checkboxlist.html</guid>
-      <orgPath>/App_Plugins/uDynamic/PropertyEditors/CheckboxList</orgPath>
-      <orgName>checkboxlist.html</orgName>
-    </file>
-    <file>
-      <guid>checkboxlistcontroller.js</guid>
-      <orgPath>/App_Plugins/uDynamic/PropertyEditors/CheckboxList</orgPath>
-      <orgName>checkboxlistcontroller.js</orgName>
-    </file>
-    <file>
-      <guid>dropdownlist.html</guid>
-      <orgPath>/App_Plugins/uDynamic/PropertyEditors/DropdownList</orgPath>
-      <orgName>dropdownlist.html</orgName>
-    </file>
-    <file>
-      <guid>dropdownlistcontroller.js</guid>
-      <orgPath>/App_Plugins/uDynamic/PropertyEditors/DropdownList</orgPath>
-      <orgName>dropdownlistcontroller.js</orgName>
-    </file>
-    <file>
-      <guid>dropdownlistsql.html</guid>
-      <orgPath>/App_Plugins/uDynamic/PropertyEditors/DropdownListSql</orgPath>
-      <orgName>dropdownlistsql.html</orgName>
-    </file>
-    <file>
-      <guid>dropdownlistsqlcontroller.js</guid>
-      <orgPath>/App_Plugins/uDynamic/PropertyEditors/DropdownListSql</orgPath>
-      <orgName>dropdownlistsqlcontroller.js</orgName>
-    </file>
-    <file>
-      <guid>chosen-sprite.png</guid>
-      <orgPath>/App_Plugins/uDynamic/ThirdParty/chosen</orgPath>
-      <orgName>chosen-sprite.png</orgName>
-    </file>
-    <file>
-      <guid>chosen-sprite@2x.png</guid>
-      <orgPath>/App_Plugins/uDynamic/ThirdParty/chosen</orgPath>
-      <orgName>chosen-sprite@2x.png</orgName>
-    </file>
-    <file>
-      <guid>chosen.jquery.min.js</guid>
-      <orgPath>/App_Plugins/uDynamic/ThirdParty/chosen</orgPath>
-      <orgName>chosen.jquery.min.js</orgName>
-    </file>
-    <file>
-      <guid>chosen.min.css</guid>
-      <orgPath>/App_Plugins/uDynamic/ThirdParty/chosen</orgPath>
-      <orgName>chosen.min.css</orgName>
+      <orgName>Install.zip</orgName>
     </file>
   </files>
   <info>
@@ -128,5 +43,9 @@
   <Languages />
   <DataTypes>
   </DataTypes>
+  <Actions>
+    <Action runat="install" alias="uninstallFiles" uninstallFiles="~/App_Plugins/uDynamic/" />
+    <Action runat="install" alias="installFiles" installFiles="~/App_Plugins/uDynamic/Install.zip" />
+  </Actions>
   <control>/App_Plugins/uDynamic/Installer/Setup.ascx</control>
 </umbPackage>
