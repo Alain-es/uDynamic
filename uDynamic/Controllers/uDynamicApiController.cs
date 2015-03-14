@@ -2,18 +2,19 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Web;
-using System.Web.Caching;
+using System.Runtime.Caching; // Requires a reference to System.Runtime.Caching.dll
 using System.Text.RegularExpressions;
 
+using Umbraco.Core;
+using Umbraco.Core.Logging;
+using Umbraco.Web;
 using Umbraco.Web.Editors;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
-using Umbraco.Core.Logging;
 
 using uDynamic.Models;
 
-namespace uDynamic.Controllers.Api
+namespace uDynamic.Controllers
 {
     [PluginController("uDynamic")]
     [IsBackOffice]
@@ -21,52 +22,33 @@ namespace uDynamic.Controllers.Api
     {
 
         /// <summary>
-        /// [Depracated]
-        /// Retrieve all dropdown list items
+        /// Retrieve all list items from the database
         /// </summary>
         [System.Web.Http.HttpGet]
-        public IEnumerable<DropdownListItem> GetDropdownListSqlItems(string dbTableName, string dbTextColumnName, string dbKeyColumnName)
+        public IEnumerable<ListItem> GetSqlListItems(string sqlCommand = "", string keyColumnName = "", string textColumnName = "", string tabsColumnName = "", string propertiesColumnName = "", int cacheDuration = 0)
         {
-            return GetDropdownListSqlItems(string.Empty, dbKeyColumnName, dbTextColumnName, string.Empty, string.Empty, string.Empty, 0);
+            return uDynamicController.GetSqlListItems(sqlCommand, keyColumnName, textColumnName, tabsColumnName, propertiesColumnName, cacheDuration);
         }
+    }
 
+
+    public class uDynamicController
+    {
         /// <summary>
-        /// Retrieve all dropdown list items
+        /// Retrieve all list items from the database
         /// </summary>
-        [System.Web.Http.HttpGet]
-        public IEnumerable<DropdownListItem> GetDropdownListSqlItems(string sqlCommand, string keyColumnName, string textColumnName, string tabsColumnName, string propertiesColumnName, string tableName, int cacheDuration)
+        public static IEnumerable<ListItem> GetSqlListItems(string sqlCommand = "", string keyColumnName = "", string textColumnName = "", string tabsColumnName = "", string propertiesColumnName = "", int cacheDuration = 0)
         {
-            List<DropdownListItem> result = new List<DropdownListItem>();
-
-            if (string.IsNullOrWhiteSpace(sqlCommand) && string.IsNullOrWhiteSpace(tableName))
-                return result;
+            List<ListItem> result = new List<ListItem>();
 
             if (string.IsNullOrWhiteSpace(sqlCommand))
-            {
-                if (string.IsNullOrWhiteSpace(keyColumnName) || string.IsNullOrWhiteSpace(textColumnName))
-                {
-                    return result;
-                }
-
-                // Create the SQL command using the table and column names
-                string selectClause = string.Format("{0}, {1}", keyColumnName, textColumnName);
-                if (!string.IsNullOrWhiteSpace(tabsColumnName))
-                {
-                    selectClause = string.Format("{0}, {1}", selectClause, tabsColumnName);
-                }
-                if (!string.IsNullOrWhiteSpace(propertiesColumnName))
-                {
-                    selectClause = string.Format("{0}, {1}", selectClause, propertiesColumnName);
-                }
-
-                sqlCommand = string.Format("SELECT {0} FROM {1}", selectClause, tableName);
-            }
+                return result;
 
             // Check whether is is cached
             string cacheId = string.Format(uDynamic.Constants.Cache.IdPattern.SqlCommandResult, sqlCommand);
             if (cacheDuration > 0)
             {
-                var cachedResult = HttpContext.Current.Cache[cacheId] as List<DropdownListItem>;
+                var cachedResult = MemoryCache.Default[cacheId] as List<ListItem>;
                 if (cachedResult != null)
                 {
                     return cachedResult;
@@ -75,60 +57,96 @@ namespace uDynamic.Controllers.Api
 
             try
             {
-                var sqlDataReader = Microsoft.ApplicationBlocks.Data.SqlHelper.ExecuteReader(ApplicationContext.DatabaseContext.ConnectionString, System.Data.CommandType.Text, sqlCommand);
+                var sqlDataReader = Microsoft.ApplicationBlocks.Data.SqlHelper.ExecuteReader(ApplicationContext.Current.DatabaseContext.ConnectionString, System.Data.CommandType.Text, sqlCommand);
                 while (sqlDataReader.Read())
                 {
-                    DropdownListItem item = new DropdownListItem();
+                    ListItem dropdownListItem = new ListItem();
+
+                    // Key
+                    var column = new Column();
                     if (!string.IsNullOrWhiteSpace(keyColumnName))
                     {
-                        item.key = sqlDataReader[keyColumnName].ToString();
+                        column.columnName = keyColumnName;
+                        column.columnValue = sqlDataReader[keyColumnName].ToString();
                     }
                     else
                     {
-                        item.key = sqlDataReader.GetValue(0).ToString();
+                        column.columnName = sqlDataReader.GetName(0);
+                        column.columnValue = sqlDataReader.GetValue(0).ToString();
                     }
+                    dropdownListItem.columns.Add(0, column);
+
+                    // Text
+                    column = new Column();
                     if (!string.IsNullOrWhiteSpace(textColumnName))
                     {
-                        item.text = sqlDataReader[textColumnName].ToString();
+                        column.columnName = textColumnName;
+                        column.columnValue = sqlDataReader[textColumnName].ToString();
                     }
                     else
                     {
-                        item.text = sqlDataReader.GetValue(1).ToString();
+                        column.columnName = sqlDataReader.GetName(1);
+                        column.columnValue = sqlDataReader.GetValue(1).ToString();
                     }
+                    dropdownListItem.columns.Add(1, column);
+
+                    // Tabs
+                    column = new Column();
                     if (!string.IsNullOrWhiteSpace(tabsColumnName))
                     {
-                        item.tabs = sqlDataReader[tabsColumnName].ToString();
+                        column.columnName = tabsColumnName;
+                        column.columnValue = sqlDataReader[tabsColumnName].ToString();
+                        dropdownListItem.columns.Add(2, column);
                     }
                     else
                     {
-                        if (sqlDataReader.FieldCount > 2)
-                        {
-                            item.tabs = sqlDataReader.GetValue(2).ToString();
-                        }
+                        column.columnName = string.Empty;
+                        column.columnValue = string.Empty;
+                        dropdownListItem.columns.Add(2, column);
                     }
+
+                    // Properties
+                    column = new Column();
                     if (!string.IsNullOrWhiteSpace(propertiesColumnName))
                     {
-                        item.properties = sqlDataReader[propertiesColumnName].ToString();
+                        column.columnName = propertiesColumnName;
+                        column.columnValue = sqlDataReader[propertiesColumnName].ToString();
+                        dropdownListItem.columns.Add(3, column);
                     }
                     else
                     {
-                        if (sqlDataReader.FieldCount > 3)
-                        {
-                            item.properties = sqlDataReader.GetValue(3).ToString();
-                        }
+                        column.columnName = string.Empty;
+                        column.columnValue = string.Empty;
+                        dropdownListItem.columns.Add(3, column);
                     }
-                    result.Add(item);
+
+                    // Other columns
+                    for (int i = 0; i < sqlDataReader.FieldCount; i++)
+                    {
+                        // Check whether the column was already added
+                        var columnName = sqlDataReader.GetName(i);
+                        if (dropdownListItem.columns.Where(c => c.Value.columnName.InvariantEquals(columnName)).Count() > 0)
+                        {
+                            continue;
+                        }
+                        column = new Column();
+                        column.columnName = columnName;
+                        column.columnValue = sqlDataReader.GetValue(i).ToString();
+                        dropdownListItem.columns.Add(dropdownListItem.columns.Count, column);
+                    }
+
+                    result.Add(dropdownListItem);
                 }
             }
             catch (System.Exception ex)
             {
-                LogHelper.Error<uDynamicApiController>(string.Format("Error executing the SQL command '{0}'.", sqlCommand), ex);
+                LogHelper.Error<uDynamicController>(string.Format("Error executing the SQL command '{0}'.", sqlCommand), ex);
             }
 
             // Cache the result
             if (cacheDuration > 0)
             {
-                HttpContext.Current.Cache.Add(cacheId, result, null, DateTime.Now.AddSeconds(cacheDuration), Cache.NoSlidingExpiration, System.Web.Caching.CacheItemPriority.High, null);
+                MemoryCache.Default.Add(cacheId, result, new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(cacheDuration) });
             }
 
             return result;

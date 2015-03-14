@@ -9,9 +9,10 @@ namespace uDynamic.Constants
     {
         public class PropertyEditorAlias
         {
-            public static readonly string CheckboxList = "uDynamic.CheckboxList";
-            public static readonly string DropdownList = "uDynamic.DropdownList";
-            public static readonly string DropdownListSql = "uDynamic.DropdownListSql";
+            public const string CheckboxList = "uDynamic.CheckboxList";
+            public const string CheckboxListSql = "uDynamic.CheckboxListSql";
+            public const string DropdownList = "uDynamic.DropdownList";
+            public const string DropdownListSql = "uDynamic.DropdownListSql";
         }
     }
 

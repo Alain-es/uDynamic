@@ -125,6 +125,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -246,7 +247,7 @@
     <Compile Include="App_Code\PackageActions\InstallFiles.cs" />
     <Compile Include="App_Code\PackageActions\UninstallFiles.cs" />
     <Compile Include="Controllers\uDynamicApiController.cs" />
-    <Compile Include="Models\DropdownListItem.cs" />
+    <Compile Include="Models\ListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

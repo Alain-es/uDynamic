@@ -22,8 +22,17 @@ function ($scope, $q, $timeout, assetsService) {
 
         // Check whether the model is initialized
         if (!$scope.model.value) {
-            $scope.model.value = "";
+            $scope.model.value = [];
         }
+            // Backward compatibility with older versions 
+        else if (!angular.isArray($scope.model.value)) {
+            var value = $scope.model.value;
+            $scope.model.value = [];
+            $scope.model.value.push(value);
+        }
+
+        // Used to bind the single value dropdown with the first item of the array
+        $scope.modelValueFirstItem = $scope.model.value[0];
 
         // Remove any emtpy item from the list
         $scope.model.config.items.items = $scope.model.config.items.items.filter(function (item) {
@@ -54,7 +63,7 @@ function ($scope, $q, $timeout, assetsService) {
 
         function changeVisibilityAllItems() {
             angular.forEach($scope.items, function (value, key) {
-                // Check whether it is the currently selected value
+                // Check whether it is a currently selected value
                 if ($scope.model && $scope.model.value == value.key) {
                     changeVisibilityItem($scope, value, true);
                 }

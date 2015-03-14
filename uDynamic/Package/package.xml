@@ -7,11 +7,6 @@
       <orgName>uDynamic.dll</orgName>
     </file>
     <file>
-      <guid>Setup.ascx</guid>
-      <orgPath>/App_Plugins/uDynamic/Installer</orgPath>
-      <orgName>Setup.ascx</orgName>
-    </file>
-    <file>
       <guid>Install.zip</guid>
       <orgPath>/App_Plugins/uDynamic</orgPath>
       <orgName>Install.zip</orgName>
@@ -20,7 +15,7 @@
   <info>
     <package>
       <name>uDynamic</name>
-      <version>0.4.0</version>
+      <version>0.5.0</version>
       <license url="http://opensource.org/licenses/MIT">MIT License</license>
       <url>http://our.umbraco.org/projects/backoffice-extensions/uDynamic</url>
       <requirements>

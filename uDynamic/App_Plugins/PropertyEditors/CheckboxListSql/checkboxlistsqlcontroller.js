@@ -1,20 +1,8 @@
-angular.module("umbraco").controller("uDynamic.DropdownListSqlController",
-
-function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicResource) {
+angular.module("umbraco").controller("uDynamic.CheckboxListSqlController", function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicResource) {
 
     $scope.isLoaded = false;
 
     var await = [];
-
-    // Check whether to Apply the Chosen jquery plugin
-    if ($scope.model.config.useChosen == 1) {
-        // Check whether the Chosen library is already loaded before loading it
-        if (typeof chosen === "undefined") { // Don't reload the chosen library if it is already loaded
-            await.push(assetsService.loadJs('/App_Plugins/uDynamic/ThirdParty/chosen/chosen.jquery.min.js', $scope));
-            await.push(assetsService.loadCss('/App_Plugins/uDynamic/ThirdParty/chosen/chosen.min.css', $scope));
-        }
-    }
-
     await.push(assetsService.loadJs('/App_Plugins/uDynamic/PropertyEditors/common.js', $scope));
 
     // Wait for queue to end
@@ -24,15 +12,6 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
         if (!$scope.model.value) {
             $scope.model.value = [];
         }
-            // Backward compatibility with older versions 
-        else if (!angular.isArray($scope.model.value)) {
-            var value = $scope.model.value;
-            $scope.model.value = [];
-            $scope.model.value.push(value);
-        }
-
-        // Used to bind the single value dropdown with the first item of the array
-        $scope.modelValueFirstItem = $scope.model.value[0];
 
         uDynamicResource.getSqlListItems($scope.model.config.sqlCommand, $scope.model.config.keyColumnName, $scope.model.config.textColumnName, $scope.model.config.tabsColumnName, $scope.model.config.propertiesColumnName, $scope.model.config.cacheDuration).then(
             function (response) {
@@ -58,7 +37,7 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
                     return item.key !== "" && item.text !== "";
                 });
 
-                // Populate the dropdown list
+                // Populate the checkbox list
                 $scope.items = items;
 
                 // Remove from the model any previously selected item that doesn't exist in the list anymore
@@ -73,31 +52,38 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
 
                 $scope.isLoaded = true;
 
-                // Change visibility/state of the tabs and properties depending on the dropdown list initial values
+
+                // Change visibility/state of the tabs and properties depending on the checkbox list initial values
                 $timeout(function () {
                     changeVisibilityAllItems();
                     $scope.isLoaded = true;
                 }, 0);
 
-                // Item click
-                $scope.click = function click() {
-                    changeVisibilityAllItems();
-                };
 
-                // Check whether to Apply the Chosen jquery plugin
-                if ($scope.model.config.useChosen == 1) {
-                    $timeout(function () {
-                        $("#" + $scope.model.alias).chosen({ width: "95%" });
-                    }, 0);
-                }
+                // Item click
+                $scope.click = function click(item) {
+                    var index = $scope.model.value.indexOf(item.key);
+                    if (index > -1) {
+                        // Is currently selected
+                        $scope.model.value.splice(index, 1);
+                        changeVisibilityItem($scope, item, false);
+                    }
+                    else {
+                        // Is newly selected
+                        $scope.model.value.push(item.key);
+                        changeVisibilityItem($scope, item, true);
+                    }
+                };
 
                 function changeVisibilityAllItems() {
                     angular.forEach($scope.items, function (value, key) {
-                        // Check whether it is a currently selected value
-                        if ($scope.model && $scope.model.value == value.key) {
+                        var index = $scope.model.value.indexOf(value.key);
+                        if (index > -1) {
+                            // Is currently selected
                             changeVisibilityItem($scope, value, true);
                         }
                         else {
+                            // Is newly selected
                             changeVisibilityItem($scope, value, false);
                         }
                     });
@@ -107,7 +93,6 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
                 notificationsService.error("Error", "Error loading dropdown list items");
                 console.log(error);
             });
-
 
     });
 

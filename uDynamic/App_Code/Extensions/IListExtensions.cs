@@ -17,6 +17,18 @@ namespace uDynamic.Extensions
                 }
             }
         }
+
+        public static void AddRangeUniqueWithTrimming(this IList<string> self, IEnumerable<string> items)
+        {
+            foreach (var item in items)
+            {
+                if (!self.Contains(item))
+                {
+                    self.Add(item.Trim());
+                }
+            }
+        }
+
     }
 
 }
