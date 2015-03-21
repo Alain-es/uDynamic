@@ -5,7 +5,7 @@
     <div ng-show="isLoaded && !items.length">There are no items to display.</div>
 
     <div ng-show="isLoaded && items.length">
-        <select id="{{model.alias}}" class="chosen-select umb-editor umb-dropdown" ng-switch-default ng-model="modelValueFirstItem" ng-change="click()" ng-options="item.key as item.text for item in items">
+        <select id="{{model.alias}}" class="chosen-select umb-editor umb-dropdown" ng-switch-default ng-model="model.value" ng-change="click()" ng-options="item.key as item.text for item in items">
             <option value=""></option>
         </select>
         <select id="{{model.alias}}" class="chosen-select umb-editor umb-dropdown" ng-switch-when="1" multiple size="10" ng-model="model.value" ng-change="click()" ng-options="item.key as item.text for item in items">

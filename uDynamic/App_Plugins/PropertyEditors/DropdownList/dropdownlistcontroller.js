@@ -22,17 +22,23 @@ function ($scope, $q, $timeout, assetsService) {
 
         // Check whether the model is initialized
         if (!$scope.model.value) {
+            if ($scope.model.config.multiple == 1) {
             $scope.model.value = [];
         }
-            // Backward compatibility with older versions 
+            else {
+                $scope.model.value = "";
+            }
+        }
         else if (!angular.isArray($scope.model.value)) {
+            if ($scope.model.config.multiple == 1) {
             var value = $scope.model.value;
             $scope.model.value = [];
             $scope.model.value.push(value);
         }
-
-        // Used to bind the single value dropdown with the first item of the array
-        $scope.modelValueFirstItem = $scope.model.value[0];
+        }
+        else if ($scope.model.config.multiple != 1) {
+            $scope.model.value = $scope.model.value[0];
+        }
 
         // Remove any emtpy item from the list
         $scope.model.config.items.items = $scope.model.config.items.items.filter(function (item) {
@@ -42,10 +48,21 @@ function ($scope, $q, $timeout, assetsService) {
         // Populate the dropdown list
         $scope.items = $scope.model.config.items.items;
 
+        // Remove from the model any previously selected item that doesn't exist in the list anymore
+        if ($scope.model.config.multiple == 1) {
+            var onlyValidSelectedItems = [];
+            angular.forEach($scope.items, function (value, key) {
+                var index = $scope.model.value.indexOf(value.key);
+                if (index > -1) {
+                    onlyValidSelectedItems.push(value.key);
+                }
+            });
+            $scope.model.value = onlyValidSelectedItems;
+        }
+        $scope.isLoaded = true;
         // Change visibility/state of the tabs and properties depending on the dropdown list initial values
         $timeout(function () {
             changeVisibilityAllItems();
-            $scope.isLoaded = true;
         }, 0);
 
 

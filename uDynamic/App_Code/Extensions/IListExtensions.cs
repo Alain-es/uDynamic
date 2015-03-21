@@ -24,7 +24,7 @@ namespace uDynamic.Extensions
         {
             foreach (var item in items)
             {
-                if (!self.InvariantContains(item.Trim()))
+                if (!self.Contains(item.Trim()))
                 {
                     self.Add(item.Trim());
                 }
