@@ -7,6 +7,7 @@ using System.Web.Routing;
 
 using Umbraco.Core;
 using Umbraco.Core.Logging;
+using Umbraco.Web;
 using UmbracoExamine;
 using Examine;
 using Examine.SearchCriteria;
@@ -18,8 +19,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using uDynamic.EmbeddedAssembly;
-using uDynamic.Extensions;
 using uDynamic.Models;
+using uDynamic.Extensions;
+using uDynamic.Helpers;
 
 namespace uDynamic.Events
 {
@@ -45,6 +47,7 @@ namespace uDynamic.Events
             // Hooks Examine's gathering data event
             try
             {
+                UmbracoHelper umbracoHelper = new UmbracoHelper(UmbracoContext.Current);
                 // Get all datatypes that are "uDynamic.DropdownListSql" or "uDynamic.CheckboxListSql"
                 var dataTypes = ApplicationContext.Current.Services.DataTypeService.GetAllDataTypeDefinitions()
                     .Where(dt => dt.PropertyEditorAlias == uDynamic.Constants.Datatype.PropertyEditorAlias.DropdownListSql || dt.PropertyEditorAlias == uDynamic.Constants.Datatype.PropertyEditorAlias.CheckboxListSql);
@@ -67,7 +70,7 @@ namespace uDynamic.Events
                 {
                     if (ExamineManager.Instance.IndexProviderCollection.Where(ip => ip.Name.InvariantEquals(indexProvider.Trim())).Count() > 0)
                     {
-                        ExamineManager.Instance.IndexProviderCollection[indexProvider].GatheringNodeData += ExamineEvents_GatheringNodeData;
+                        ExamineManager.Instance.IndexProviderCollection[indexProvider].GatheringNodeData += (sender, e) => ExamineEvents_GatheringNodeData(sender, e, umbracoHelper);
                     }
                 }
             }
@@ -78,7 +81,7 @@ namespace uDynamic.Events
 
         }
 
-        private void ExamineEvents_GatheringNodeData(object sender, IndexingNodeDataEventArgs e)
+        private void ExamineEvents_GatheringNodeData(object sender, IndexingNodeDataEventArgs e, UmbracoHelper umbracoHelper)
         {
 
             try
@@ -91,7 +94,16 @@ namespace uDynamic.Events
                 if (properties.Count() < 1) return;
 
                 // Add new fields to the index 
-                var content = ApplicationContext.Current.Services.ContentService.GetById(e.NodeId);
+                object content = null;
+                if (umbracoHelper != null)
+                {
+                    content = umbracoHelper.Content(e.NodeId);
+                }
+                if (content == null)
+                {
+                    content = ApplicationContext.Current.Services.ContentService.GetById(e.NodeId);
+                }
+                if (content == null) return;
                 foreach (var property in properties)
                 {
                     // Get the prevalues
@@ -109,15 +121,16 @@ namespace uDynamic.Events
                     {
                         List<string> propertyValues = new List<string>();
                         // Check whether the property contains a value
-                        if (content.GetValue(property.Alias) == null || string.IsNullOrWhiteSpace(content.GetValue(property.Alias).ToString())) continue;
+                        string propertyRawValue = ContentHelper.GetPropertyValueAsString(content, property.Alias);
+                        if (string.IsNullOrWhiteSpace(propertyRawValue)) continue;
                         // For backward compatibility with the previous versions of SQLDropdownList, we convert the single value into an array
-                        if (!content.GetValue(property.Alias).ToString().Contains("["))
+                        if (!propertyRawValue.Contains("["))
                         {
-                            propertyValues.Add(content.GetValue(property.Alias).ToString());
+                            propertyValues.Add(propertyRawValue);
                         }
                         else
                         {
-                            propertyValues = JsonConvert.DeserializeObject<IEnumerable<string>>(content.GetValue(property.Alias).ToString()).ToList();
+                            propertyValues = JsonConvert.DeserializeObject<IEnumerable<string>>(propertyRawValue).ToList();
                         }
                         if (propertyValues.Count() < 1) continue;
 
@@ -143,14 +156,17 @@ namespace uDynamic.Events
                                     indexFieldValue += value.columnValue + " ";
                                 }
                             }
-                            var indexFielName = property.Alias + indexField.Trim();
-                            if (e.Fields.ContainsKey(indexFielName))
+                            if (!string.IsNullOrWhiteSpace(indexFieldValue))
                             {
-                                e.Fields[indexFielName] = indexFieldValue.Trim();
-                            }
-                            else
-                            {
-                                e.Fields.Add(indexFielName, indexFieldValue.Trim());
+                                var indexFielName = property.Alias + indexField.Trim();
+                                if (e.Fields.ContainsKey(indexFielName))
+                                {
+                                    e.Fields[indexFielName] = indexFieldValue.Trim();
+                                }
+                                else
+                                {
+                                    e.Fields.Add(indexFielName, indexFieldValue.Trim());
+                                }
                             }
                         }
                     }
