@@ -49,7 +49,7 @@ namespace uDynamic.Controllers
             if (cacheDuration > 0)
             {
                 var cachedResult = MemoryCache.Default[cacheId] as List<ListItem>;
-                if (cachedResult != null)
+                if (cachedResult != null && cachedResult.Count() > 0)
                 {
                     return cachedResult;
                 }
@@ -144,7 +144,7 @@ namespace uDynamic.Controllers
             }
 
             // Cache the result
-            if (cacheDuration > 0)
+            if (cacheDuration > 0 && result != null && result.Count() > 0)
             {
                 MemoryCache.Default.Add(cacheId, result, new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(cacheDuration) });
             }
