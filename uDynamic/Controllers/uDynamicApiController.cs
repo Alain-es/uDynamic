@@ -146,7 +146,7 @@ namespace uDynamic.Controllers
             // Cache the result
             if (cacheDuration > 0 && result != null && result.Count() > 0)
             {
-                MemoryCache.Default.Add(cacheId, result, new CacheItemPolicy() { AbsoluteExpiration = DateTime.Now.AddSeconds(cacheDuration) });
+                MemoryCache.Default.Add(cacheId, result, new CacheItemPolicy() { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(cacheDuration) });
             }
 
             return result;
