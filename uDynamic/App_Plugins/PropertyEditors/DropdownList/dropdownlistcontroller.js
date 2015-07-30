@@ -23,18 +23,18 @@ function ($scope, $q, $timeout, assetsService) {
         // Check whether the model is initialized
         if (!$scope.model.value) {
             if ($scope.model.config.multiple == 1) {
-            $scope.model.value = [];
-        }
+                $scope.model.value = [];
+            }
             else {
                 $scope.model.value = "";
             }
         }
         else if (!angular.isArray($scope.model.value)) {
             if ($scope.model.config.multiple == 1) {
-            var value = $scope.model.value;
-            $scope.model.value = [];
-            $scope.model.value.push(value);
-        }
+                var value = $scope.model.value;
+                $scope.model.value = [];
+                $scope.model.value.push(value);
+            }
         }
         else if ($scope.model.config.multiple != 1) {
             $scope.model.value = $scope.model.value[0];
@@ -44,6 +44,11 @@ function ($scope, $q, $timeout, assetsService) {
         $scope.model.config.items.items = $scope.model.config.items.items.filter(function (item) {
             return item.key !== "" && item.text !== "";
         });
+
+        // Add an empty item in order to allow users to deselect when the 'chosen' option is ticked
+        if ($scope.model.config.useChosen == 1 && $scope.model.config.multiple != 1) {
+            $scope.model.config.items.items.push({ key: '', text: '' });
+        }
 
         // Populate the dropdown list
         $scope.items = $scope.model.config.items.items;
@@ -74,7 +79,7 @@ function ($scope, $q, $timeout, assetsService) {
         // Check whether to Apply the Chosen jquery plugin
         if ($scope.model.config.useChosen == 1) {
             $timeout(function () {
-                $("#" + $scope.model.alias).chosen({ width: "95%" });
+                $("#" + $scope.model.alias).chosen({ width: "95%", allow_single_deselect: true });
             }, 0);
         }
 
