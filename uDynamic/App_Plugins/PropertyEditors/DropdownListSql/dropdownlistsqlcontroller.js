@@ -104,15 +104,19 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
                 }
 
                 function changeVisibilityAllItems() {
+                    var currentlySelectedItemValue = null;
                     angular.forEach($scope.items, function (value, key) {
                         // Check whether it is a currently selected value
                         if ($scope.model && $scope.model.value == value.key) {
-                            changeVisibilityItem($scope, value, true);
+                            currentlySelectedItemValue = value;
                         }
                         else {
                             changeVisibilityItem($scope, value, false);
                         }
                     });
+                    if (currentlySelectedItemValue) {
+                        changeVisibilityItem($scope, value, true);
+                    }
                 }
 
             }, function (error) {

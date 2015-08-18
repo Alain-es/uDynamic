@@ -76,17 +76,21 @@ angular.module("umbraco").controller("uDynamic.CheckboxListSqlController", funct
                 };
 
                 function changeVisibilityAllItems() {
+                    var currentlySelectedItemValue = null;
                     angular.forEach($scope.items, function (value, key) {
                         var index = $scope.model.value.indexOf(value.key);
                         if (index > -1) {
                             // Is currently selected
-                            changeVisibilityItem($scope, value, true);
+                            currentlySelectedItemValue = value;
                         }
                         else {
                             // Is newly selected
                             changeVisibilityItem($scope, value, false);
                         }
                     });
+                    if (currentlySelectedItemValue) {
+                        changeVisibilityItem($scope, value, true);
+                    }
                 }
 
             }, function (error) {
