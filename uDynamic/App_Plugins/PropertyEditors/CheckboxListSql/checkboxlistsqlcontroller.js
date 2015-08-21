@@ -89,7 +89,7 @@ angular.module("umbraco").controller("uDynamic.CheckboxListSqlController", funct
                         }
                     });
                     if (currentlySelectedItemValue) {
-                        changeVisibilityItem($scope, value, true);
+                        changeVisibilityItem($scope, currentlySelectedItemValue, true);
                     }
                 }
 

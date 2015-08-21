@@ -115,7 +115,7 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
                         }
                     });
                     if (currentlySelectedItemValue) {
-                        changeVisibilityItem($scope, value, true);
+                        changeVisibilityItem($scope, currentlySelectedItemValue, true);
                     }
                 }
 
