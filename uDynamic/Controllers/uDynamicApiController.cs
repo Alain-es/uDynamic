@@ -57,85 +57,88 @@ namespace uDynamic.Controllers
 
             try
             {
-                var sqlDataReader = Microsoft.ApplicationBlocks.Data.SqlHelper.ExecuteReader(ApplicationContext.Current.DatabaseContext.ConnectionString, System.Data.CommandType.Text, sqlCommand);
-                while (sqlDataReader.Read())
+                using (var sqlDataReader = Microsoft.ApplicationBlocks.Data.SqlHelper.ExecuteReader(ApplicationContext.Current.DatabaseContext.ConnectionString, System.Data.CommandType.Text, sqlCommand))
                 {
-                    ListItem dropdownListItem = new ListItem();
+                    while (sqlDataReader.Read())
+                    {
+                        ListItem dropdownListItem = new ListItem();
 
-                    // Key
-                    var column = new Column();
-                    if (!string.IsNullOrWhiteSpace(keyColumnName))
-                    {
-                        column.columnName = keyColumnName;
-                        column.columnValue = sqlDataReader[keyColumnName].ToString();
-                    }
-                    else
-                    {
-                        column.columnName = sqlDataReader.GetName(0);
-                        column.columnValue = sqlDataReader.GetValue(0).ToString();
-                    }
-                    dropdownListItem.columns.Add(0, column);
-
-                    // Text
-                    column = new Column();
-                    if (!string.IsNullOrWhiteSpace(textColumnName))
-                    {
-                        column.columnName = textColumnName;
-                        column.columnValue = sqlDataReader[textColumnName].ToString();
-                    }
-                    else
-                    {
-                        column.columnName = sqlDataReader.GetName(1);
-                        column.columnValue = sqlDataReader.GetValue(1).ToString();
-                    }
-                    dropdownListItem.columns.Add(1, column);
-
-                    // Tabs
-                    column = new Column();
-                    if (!string.IsNullOrWhiteSpace(tabsColumnName))
-                    {
-                        column.columnName = tabsColumnName;
-                        column.columnValue = sqlDataReader[tabsColumnName].ToString();
-                        dropdownListItem.columns.Add(2, column);
-                    }
-                    else
-                    {
-                        column.columnName = string.Empty;
-                        column.columnValue = string.Empty;
-                        dropdownListItem.columns.Add(2, column);
-                    }
-
-                    // Properties
-                    column = new Column();
-                    if (!string.IsNullOrWhiteSpace(propertiesColumnName))
-                    {
-                        column.columnName = propertiesColumnName;
-                        column.columnValue = sqlDataReader[propertiesColumnName].ToString();
-                        dropdownListItem.columns.Add(3, column);
-                    }
-                    else
-                    {
-                        column.columnName = string.Empty;
-                        column.columnValue = string.Empty;
-                        dropdownListItem.columns.Add(3, column);
-                    }
-
-                    // Other columns
-                    for (int i = 0; i < sqlDataReader.FieldCount; i++)
-                    {
-                        // Check whether the column was already added
-                        var columnName = sqlDataReader.GetName(i);
-                        if (dropdownListItem.columns.Where(c => c.Value.columnName.InvariantEquals(columnName)).Count() > 0)
+                        // Key
+                        var column = new Column();
+                        if (!string.IsNullOrWhiteSpace(keyColumnName))
                         {
-                            continue;
+                            column.columnName = keyColumnName;
+                            column.columnValue = sqlDataReader[keyColumnName].ToString();
                         }
-                        column = new Column();
-                        column.columnName = columnName;
-                        column.columnValue = sqlDataReader.GetValue(i).ToString();
-                        dropdownListItem.columns.Add(dropdownListItem.columns.Count, column);
-                    }
+                        else
+                        {
+                            column.columnName = sqlDataReader.GetName(0);
+                            column.columnValue = sqlDataReader.GetValue(0).ToString();
+                        }
+                        dropdownListItem.columns.Add(0, column);
 
-                    result.Add(dropdownListItem);
+                        // Text
+                        column = new Column();
+                        if (!string.IsNullOrWhiteSpace(textColumnName))
+                        {
+                            column.columnName = textColumnName;
+                            column.columnValue = sqlDataReader[textColumnName].ToString();
+                        }
+                        else
+                        {
+                            column.columnName = sqlDataReader.GetName(1);
+                            column.columnValue = sqlDataReader.GetValue(1).ToString();
+                        }
+                        dropdownListItem.columns.Add(1, column);
+
+                        // Tabs
+                        column = new Column();
+                        if (!string.IsNullOrWhiteSpace(tabsColumnName))
+                        {
+                            column.columnName = tabsColumnName;
+                            column.columnValue = sqlDataReader[tabsColumnName].ToString();
+                            dropdownListItem.columns.Add(2, column);
+                        }
+                        else
+                        {
+                            column.columnName = string.Empty;
+                            column.columnValue = string.Empty;
+                            dropdownListItem.columns.Add(2, column);
+                        }
+
+                        // Properties
+                        column = new Column();
+                        if (!string.IsNullOrWhiteSpace(propertiesColumnName))
+                        {
+                            column.columnName = propertiesColumnName;
+                            column.columnValue = sqlDataReader[propertiesColumnName].ToString();
+                            dropdownListItem.columns.Add(3, column);
+                        }
+                        else
+                        {
+                            column.columnName = string.Empty;
+                            column.columnValue = string.Empty;
+                            dropdownListItem.columns.Add(3, column);
+                        }
+
+                        // Other columns
+                        for (int i = 0; i < sqlDataReader.FieldCount; i++)
+                        {
+                            // Check whether the column was already added
+                            var columnName = sqlDataReader.GetName(i);
+                            if (dropdownListItem.columns.Where(c => c.Value.columnName.InvariantEquals(columnName)).Count() > 0)
+                            {
+                                continue;
+                            }
+                            column = new Column();
+                            column.columnName = columnName;
+                            column.columnValue = sqlDataReader.GetValue(i).ToString();
+                            dropdownListItem.columns.Add(dropdownListItem.columns.Count, column);
+                        }
+
+                        result.Add(dropdownListItem);
+                    }
+                    sqlDataReader.Close();
                 }
             }
             catch (System.Exception ex)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -137,6 +138,11 @@ namespace uDynamic.Events
                         // Get the values from database (list items)
                         int cacheDuration = 0;
                         int.TryParse(prevalues.PreValuesAsDictionary["cacheDuration"].Value, out cacheDuration);
+                        if (cacheDuration < 1)
+                        {
+                            // Force a 2 seconds cache in order to improve slightly the performance when indexing a lot of nodes
+                            cacheDuration = 2;
+                        }
                         IEnumerable<ListItem> listItems = uDynamic.Controllers.uDynamicController.GetSqlListItems(prevalues.PreValuesAsDictionary["sqlCommand"].Value, prevalues.PreValuesAsDictionary["dbKeyColumnName"].Value, prevalues.PreValuesAsDictionary["dbTextColumnName"].Value, prevalues.PreValuesAsDictionary["dbTabsColumnName"].Value, prevalues.PreValuesAsDictionary["dbPropertiesColumnName"].Value, cacheDuration);
                         // Lookup in the list the item that matches the id (key) saved in content node property (if it is a checkbox list then it could be more than one id)
                         // Each listItem is a list of columns in which the Column[0] contains the id (key)
