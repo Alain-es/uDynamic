@@ -40,7 +40,7 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
             $scope.model.value = $scope.model.value[0];
         }
 
-        uDynamicResource.getSqlListItems($scope.model.config.sqlCommand, $scope.model.config.keyColumnName, $scope.model.config.textColumnName, $scope.model.config.tabsColumnName, $scope.model.config.propertiesColumnName, $scope.model.config.cacheDuration).then(
+        uDynamicResource.getSqlListItems($scope.model.config.sqlCommand, $scope.model.config.dbKeyColumnName, $scope.model.config.dbTextColumnName, $scope.model.config.dbTabsColumnName, $scope.model.config.dbPropertiesColumnName, $scope.model.config.cacheDuration).then(
             function (response) {
 
                 // Map the columns with the values retrieved from the database into the same model used for the other uDynamic property editors (prevalues)
@@ -48,11 +48,11 @@ function ($scope, $q, $timeout, assetsService, notificationsService, uDynamicRes
                     var item = {};
                     item.key = value.columns[0].columnValue;
                     item.text = value.columns[1].columnValue;
-                    if (value.columns.length > 2)
+                    if (value.columns[2])
                         item.tabs = value.columns[2].columnValue;
                     else
                         item.tabs = '';
-                    if (value.columns.length > 3)
+                    if (value.columns[3])
                         item.properties = value.columns[3].columnValue;
                     else
                         item.properties = '';
